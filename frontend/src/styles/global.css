@@ -1,0 +1,59 @@
+/**
+ * global.css — Application stylesheet entry point
+ *
+ * LOAD ORDER MATTERS (CSS spec: @import must precede other rules):
+ * 1. Theme tokens      → CSS variables
+ * 2. PrimeReact theme  → Lara dark base
+ * 3. PrimeFlex         → layout utilities
+ * 4. Overrides + layout
+ * 5. Tailwind layers   → base, components, utilities
+ */
+
+@import './theme.css';
+@import 'primereact/resources/themes/lara-dark-blue/theme.css';
+@import 'primeflex/primeflex.css';
+@import './primereact-overrides.css';
+@import './layout.css';
+@import './animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,44 @@
+/**
+ * layout.css — Structural layout utilities for AppLayout shell
+ *
+ * WHY: Separates layout concerns from global resets and theme tokens.
+ *      The shell (navbar + sidebar + main + footer) uses these classes.
+ */
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.app-layout__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.app-layout__main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-lg);
+}
+
+.app-layout__main--with-sidebar {
+  margin-left: 0;
+}
+
+@media (min-width: 1024px) {
+  .app-layout__main--with-sidebar {
+    margin-left: var(--sidebar-width);
+  }
+}
+
+/* Glass card primitive — reused across features in later phases */
+.glass-card {
+  background: var(--color-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass);
+}

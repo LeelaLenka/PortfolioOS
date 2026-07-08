@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Phase 1: placeholder model to validate Prisma wiring.
+// Full normalized schema comes in a later phase.
+model HealthCheck {
+  id        String   @id @default(cuid())
+  message   String   @default("PortfolioOS API is connected to PostgreSQL")
+  createdAt DateTime @default(now())
+
+  @@map("health_checks")
+}
