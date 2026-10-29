@@ -119,6 +119,8 @@ export const portfolioService = {
         signal: p?.signal ?? '',
         status: p?.status ?? '',
         tags: p?.tags ?? [],
+        openTo: p?.openTo ?? [],
+        currentPosition: p?.currentPosition ?? '',
         roles: (p?.roles ?? []) as Prisma.InputJsonValue,
       },
     });

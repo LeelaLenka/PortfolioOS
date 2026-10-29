@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { allowedOrigins } from './config/env.js';
 import { errorHandler, notFound } from './middleware/error.js';
 import { adminRouter } from './routes/admin.routes.js';
+import { imagesRouter, uploadRouter } from './routes/images.routes.js';
 import { authRouter } from './routes/auth.routes.js';
 import { meRouter } from './routes/me.routes.js';
 import { publicRouter } from './routes/public.routes.js';
@@ -13,7 +14,8 @@ export function createApp(): Express {
 
   // Render sits behind a proxy; this makes rate limiting see the real visitor IP
   app.set('trust proxy', 1);
-  app.use(helmet());
+  // cross-origin so the Vercel site can show images served by this API
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(
     cors({
       origin(origin, cb) {
@@ -23,7 +25,10 @@ export function createApp(): Express {
       },
     }),
   );
+  // Image uploads need a bigger body limit, so they're parsed before the global 200kb parser
+  app.use('/api/me/images', express.json({ limit: '3mb' }), uploadRouter);
   app.use(express.json({ limit: '200kb' }));
+  app.use('/api/images', imagesRouter);
 
   app.use('/api', publicRouter);
   app.use('/api/auth', authRouter);

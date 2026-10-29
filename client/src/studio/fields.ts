@@ -1,5 +1,5 @@
 /** Field definitions drive the generic editors, so each section is described once */
-export type FieldType = 'text' | 'textarea' | 'url' | 'list' | 'lines';
+export type FieldType = 'text' | 'textarea' | 'url' | 'list' | 'lines' | 'image';
 
 export interface FieldSpec {
   key: string;
@@ -9,6 +9,8 @@ export interface FieldSpec {
   hint?: string;
   max?: number;
   wide?: boolean;
+  /** image fields: longest side after resizing, in pixels */
+  maxSide?: number;
 }
 
 /** Arrays are edited as text: comma-separated ("list") or one per line ("lines") */
@@ -63,5 +65,6 @@ export const certificateFields: FieldSpec[] = [
   { key: 'name', label: 'Certificate', type: 'text', required: true, max: 100 },
   { key: 'issuer', label: 'Issued by', type: 'text', max: 80 },
   { key: 'date', label: 'Date', type: 'text', max: 30 },
-  { key: 'url', label: 'Credential link', type: 'url' },
+  { key: 'url', label: 'Credential link', type: 'url', hint: 'The verify link, e.g. Credly or coursera.org/verify/…' },
+  { key: 'imageUrl', label: 'Certificate image', type: 'image', wide: true, maxSide: 1400, hint: 'A screenshot or scan of the certificate.' },
 ];

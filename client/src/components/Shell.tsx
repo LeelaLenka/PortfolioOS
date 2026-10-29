@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { Logo } from './Logo';
 
 /** Page frame for the non-portfolio screens (join, login, studio) */
 export function Shell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
@@ -7,7 +8,7 @@ export function Shell({ children, wide = false }: { children: ReactNode; wide?: 
     <div className="desk shell">
       <header className="nav">
         <div className="wrap nav__inner">
-          <Link to="/" className="nav__brand mono">PortfolioOS</Link>
+          <Link to="/" className="nav__brand" aria-label="Home"><Logo initials="PO" name="PortfolioOS" /></Link>
           <nav className="nav__links" aria-label="Main">
             <Link to="/demo">Example</Link>
             <Link to="/join">Get your own</Link>

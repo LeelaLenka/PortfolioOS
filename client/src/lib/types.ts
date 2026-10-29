@@ -12,6 +12,8 @@ export interface Profile {
   signal: string;
   status: string;
   tags: string[];
+  openTo: string[];
+  currentPosition: string;
   roles: RoleCard[];
   avatarUrl: string;
   email: string;
@@ -42,7 +44,7 @@ export interface Experience {
   points: string[];
 }
 
-export interface Certificate { name: string; issuer: string; date: string; url: string }
+export interface Certificate { name: string; issuer: string; date: string; url: string; imageUrl: string }
 
 export interface Portfolio {
   slug: string;

@@ -29,6 +29,8 @@ const owner = {
     signal: 'MongoDB Associate Developer',
     status: 'Open to SWE internships, Jan 2027',
     tags: ['Full-stack', 'Backend', 'Databases'],
+    openTo: ['Software Development Engineer', 'AI/ML Engineer', 'Database Engineer'],
+    currentPosition: 'B.Tech CSE (AI & ML) student at SRM, building full-stack and AI projects',
     roles: [
       { title: 'Full-stack developer', description: 'Builds complete web apps: React front ends, Node.js and Express APIs, and the database underneath.' },
       { title: 'Backend engineer', description: 'Designs REST APIs, authentication and data models in Node.js and Java Spring Boot.' },
@@ -113,8 +115,8 @@ const owner = {
     },
   ],
   certificates: [
-    { name: 'MongoDB Associate Developer', issuer: 'MongoDB, Inc.', date: '', url: '' },
-    { name: 'Advanced Java Concepts', issuer: 'Coursera', date: '', url: '' },
+    { name: 'MongoDB Associate Developer', issuer: 'MongoDB, Inc.', date: '', url: '', imageUrl: '' },
+    { name: 'Advanced Java Concepts', issuer: 'Coursera', date: '', url: '', imageUrl: '' },
   ],
 };
 
@@ -133,6 +135,8 @@ const demo = {
     signal: 'Ideas to production',
     status: 'Building',
     tags: ['Backend', 'Data', 'Cloud'],
+    openTo: ['Backend Engineer', 'Data Engineer'],
+    currentPosition: 'Backend Engineer at Example Corp',
     roles: [
       { title: 'Backend engineer', description: 'Designs services and APIs that stay fast as usage grows.' },
       { title: 'Data engineer', description: 'Builds pipelines that move and clean data on a schedule.' },
@@ -189,7 +193,7 @@ const demo = {
       points: ['Owns the payments API used by three product teams.', 'Cut nightly batch time by moving jobs to a queue.'],
     },
   ],
-  certificates: [{ name: 'Example Cloud Certification', issuer: 'Example Institute', date: '2024', url: '' }],
+  certificates: [{ name: 'Example Cloud Certification', issuer: 'Example Institute', date: '2024', url: '', imageUrl: '' }],
 };
 
 type Content = typeof owner | typeof demo;

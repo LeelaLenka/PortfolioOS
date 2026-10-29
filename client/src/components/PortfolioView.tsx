@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import type { Portfolio } from '../lib/types';
 import { GithubIcon, LinkIcon, LinkedinIcon, MailIcon, PinIcon } from './Icons';
+import { Logo } from './Logo';
+import { ParticleField } from './ParticleField';
 
 /** "Lenka Leela Krishna Sai Bharat" -> "LB" (first + last initial) */
 function initials(name: string) {
@@ -18,6 +20,8 @@ function handleOf(p: Portfolio) {
   const last = p.profile.fullName.trim().split(/\s+/).pop() ?? p.slug;
   return last.toLowerCase().replace(/[^a-z0-9]/g, '') || p.slug;
 }
+
+const firstWordCap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const SECTIONS = [
   { id: 'about', label: 'About' },
@@ -43,11 +47,14 @@ export function PortfolioView({ data, banner }: { data: Portfolio; banner?: Reac
   });
 
   return (
-    <div className="desk">
+    <div className="desk desk--live">
+      <ParticleField />
       {banner}
       <header className="nav">
         <div className="wrap nav__inner">
-          <a href="#top" className="nav__brand mono">{tag}://desk</a>
+          <a href="#top" className="nav__brand" aria-label={`${profile.fullName}, back to top`}>
+            <Logo initials={tag} name={firstWordCap(handleOf(data))} />
+          </a>
           <nav aria-label="Sections" className="nav__links">
             {visible.map((s) => (
               <a key={s.id} href={`#${s.id}`}>{s.label}</a>
@@ -143,6 +150,9 @@ function Hero({ data, tag }: { data: Portfolio; tag: string }) {
             )}
             <p className="scan__name">{p.fullName}</p>
             {p.headline && <p className="muted">{p.headline}</p>}
+            {p.currentPosition && (
+              <p className="currently"><span className="mono">currently</span> {p.currentPosition}</p>
+            )}
             {scan.length > 0 && (
               <dl className="scan__rows">
                 {scan.map(([k, v]) => (
@@ -162,12 +172,21 @@ function Hero({ data, tag }: { data: Portfolio; tag: string }) {
 
 function About({ data }: { data: Portfolio }) {
   const p = data.profile;
-  if (!p.about && !p.roles.length) return null;
+  const openTo = p.openTo ?? [];
+  if (!p.about && !p.roles.length && !openTo.length) return null;
   return (
     <section id="about" className="section">
       <div className="wrap">
         <h2 className="section__title">About</h2>
         {p.about && <p className="lead">{p.about}</p>}
+        {openTo.length > 0 && (
+          <div className="open-to">
+            <p className="open-to__label">Open to roles</p>
+            <ul className="open-to__list">
+              {openTo.map((r) => <li key={r}>{r}</li>)}
+            </ul>
+          </div>
+        )}
         {p.roles.length > 0 && (
           <div className="roles">
             {p.roles.map((r) => (
@@ -244,8 +263,12 @@ function Projects({ data }: { data: Portfolio }) {
               </ul>
               {(p.liveUrl || p.repoUrl) && (
                 <div className="case__links">
-                  {p.liveUrl && <a href={p.liveUrl} target="_blank" rel="noreferrer"><LinkIcon /> Live demo</a>}
-                  {p.repoUrl && <a href={p.repoUrl} target="_blank" rel="noreferrer"><GithubIcon /> Code</a>}
+                  {p.liveUrl && (
+                    <a className="live-btn" href={p.liveUrl} target="_blank" rel="noreferrer">
+                      <span className="live-dot" aria-hidden="true" /> Live demo <LinkIcon />
+                    </a>
+                  )}
+                  {p.repoUrl && <a className="code-link" href={p.repoUrl} target="_blank" rel="noreferrer"><GithubIcon /> Code</a>}
                 </div>
               )}
             </article>
@@ -284,10 +307,20 @@ function ExperienceSection({ data }: { data: Portfolio }) {
             <ul className="certs">
               {data.certificates.map((c) => (
                 <li key={c.name} className="panel cert">
-                  <p className="cert__name">
-                    {c.url ? <a href={c.url} target="_blank" rel="noreferrer">{c.name}</a> : c.name}
-                  </p>
-                  <p className="muted small">{[c.issuer, c.date].filter(Boolean).join(', ')}</p>
+                  {c.imageUrl && (
+                    <a className="cert__thumb" href={c.url || c.imageUrl} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+                      <img src={c.imageUrl} alt="" loading="lazy" />
+                    </a>
+                  )}
+                  <div className="cert__body">
+                    <p className="cert__name">{c.name}</p>
+                    <p className="muted small">{[c.issuer, c.date].filter(Boolean).join(', ')}</p>
+                    {(c.url || c.imageUrl) && (
+                      <a className="cert__verify small" href={c.url || c.imageUrl} target="_blank" rel="noreferrer">
+                        {c.url ? 'Verify credential' : 'View certificate'} <LinkIcon />
+                      </a>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

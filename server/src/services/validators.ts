@@ -30,6 +30,8 @@ export const profileSchema = z.object({
   signal: text(80),
   status: text(80),
   tags: list(8, 40),
+  openTo: list(5, 60),
+  currentPosition: text(160),
   roles: z
     .array(z.object({ title: z.string().trim().min(1).max(60), description: text(300) }))
     .max(6)
@@ -90,6 +92,7 @@ export const certificatesSchema = z
       issuer: text(80),
       date: text(30),
       url: link,
+      imageUrl: link,
     }),
   )
   .max(20);

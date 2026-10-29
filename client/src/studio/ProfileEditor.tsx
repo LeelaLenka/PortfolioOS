@@ -14,6 +14,8 @@ const groups: { title: string; fields: FieldSpec[] }[] = [
       { key: 'intro', label: 'Short intro', type: 'textarea', max: 600, wide: true },
       { key: 'location', label: 'Location', type: 'text', max: 60 },
       { key: 'tags', label: 'Highlight chips', type: 'text', max: 340, hint: 'Comma-separated, up to 8' },
+      { key: 'currentPosition', label: 'Currently', type: 'text', max: 160, wide: true, hint: 'Your current position, e.g. “B.Tech CSE (AI & ML) student at SRM, building full-stack and AI projects”' },
+      { key: 'openTo', label: 'Open to roles', type: 'text', max: 320, wide: true, hint: 'Comma-separated, up to 5, e.g. Software Development Engineer, AI/ML Engineer, Database Engineer' },
     ],
   },
   {
@@ -23,7 +25,7 @@ const groups: { title: string; fields: FieldSpec[] }[] = [
       { key: 'stack', label: 'Stack', type: 'text', max: 80 },
       { key: 'signal', label: 'Signal', type: 'text', max: 80, hint: 'A credential or strength' },
       { key: 'status', label: 'Status', type: 'text', max: 80, hint: 'e.g. Open to internships' },
-      { key: 'avatarUrl', label: 'Photo link', type: 'url', hint: 'Optional. Leave empty to show your initials.' },
+      { key: 'avatarUrl', label: 'Your photo', type: 'image', wide: true, maxSide: 600, hint: 'A clear, well-lit head-and-shoulders photo. Leave empty to show your initials.' },
     ],
   },
   {
@@ -46,6 +48,7 @@ export function ProfileEditor({ initial, onSaved }: { initial: Profile; onSaved:
     const f: Record<string, string> = {};
     for (const [k, v] of Object.entries(initial)) if (typeof v === 'string') f[k] = v;
     f.tags = initial.tags.join(', ');
+    f.openTo = (initial.openTo ?? []).join(', ');
     return f;
   });
   const [roles, setRoles] = useState<RoleCard[]>(initial.roles);
@@ -57,6 +60,7 @@ export function ProfileEditor({ initial, onSaved }: { initial: Profile; onSaved:
     const body = {
       ...form,
       tags: (form.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
+      openTo: (form.openTo ?? '').split(',').map((s) => s.trim()).filter(Boolean),
       roles: roles.filter((r) => r.title.trim()),
     };
     try {
