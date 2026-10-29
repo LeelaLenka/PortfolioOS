@@ -1,0 +1,156 @@
+// PortfolioOS data model.
+// One User = one portfolio. The OWNER approves access requests from new MEMBERS.
+// The DEMO user holds the example portfolio shown at /demo.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  OWNER
+  MEMBER
+  DEMO
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  slug          String   @unique
+  role          Role     @default(MEMBER)
+  accessKeyHash String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile      Profile?
+  projects     Project[]
+  skillGroups  SkillGroup[]
+  experiences  Experience[]
+  certificates Certificate[]
+  messages     ContactMessage[]
+}
+
+model Profile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  fullName       String
+  headline       String   @default("")
+  location       String   @default("")
+  tagline        String   @default("")
+  intro          String   @default("")
+  about          String   @default("")
+  focus          String   @default("")
+  stack          String   @default("")
+  signal         String   @default("")
+  status         String   @default("")
+  tags           String[]
+  roles          Json     @default("[]")
+  avatarUrl      String   @default("")
+  email          String   @default("")
+  githubUsername String   @default("")
+  linkedinUrl    String   @default("")
+  resumeUrl      String   @default("")
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id       String   @id @default(cuid())
+  userId   String
+  title    String
+  category String   @default("web")
+  summary  String   @default("")
+  before   String   @default("")
+  built    String   @default("")
+  after    String   @default("")
+  tech     String[]
+  repoUrl  String   @default("")
+  liveUrl  String   @default("")
+  order    Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model SkillGroup {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String   @default("")
+  items       String[]
+  order       Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Experience {
+  id           String   @id @default(cuid())
+  userId       String
+  role         String
+  organization String
+  location     String   @default("")
+  period       String   @default("")
+  points       String[]
+  order        Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Certificate {
+  id     String @id @default(cuid())
+  userId String
+  name   String
+  issuer String @default("")
+  date   String @default("")
+  url    String @default("")
+  order  Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  email     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AccessRequest {
+  id         String        @id @default(cuid())
+  name       String
+  email      String
+  slug       String
+  reason     String        @default("")
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+  reviewedAt DateTime?
+
+  @@index([status])
+}
